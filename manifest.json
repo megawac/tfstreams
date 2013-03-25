@@ -1,0 +1,13 @@
+{
+   "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+   },
+   "description": "Displays streams from teamfortress.tv. Grabs streams from http://teamfortress.tv/rss/streams",
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDUaVLm36uGCeR/lyvb33+UTalTTdz/2wAxPwu0ppGb42+5L+AKJc+NI9yCJuDWr1bNUO6XHdzDm1hWvuhaNen0fOs9pvAQ87CN2wIqNcsu/SL2S+E6yx6WMugPDk1cr1vSw0GDUUS0FM3ifDS1N1OQraPTbIqgRsh3mV+d5Nx6UQIDAQAB",
+   "manifest_version": 2,
+   "name": "TF TV Streams",
+   "permissions": [ "http://teamfortress.tv/*/" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.1"
+}
