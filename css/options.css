@@ -1,0 +1,12 @@
+body {
+	width: 800px;
+}
+
+div.option {
+	
+}
+
+input[type="number"] {
+	width: 50px;
+	text-align: right;
+}

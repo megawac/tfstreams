@@ -1,6 +1,4 @@
 body {
-    margin: 2px;
-    padding: 3px;
 }
 
 ::-webkit-scrollbar {
@@ -17,84 +15,112 @@ body {
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.5); 
 }
 
+div#tftv-log, div#streams {
+    border-style:solid;
+    border-width:1px;
+    border-color:#CCCCCC;
+}
+
 div#tftv-logo {
-	background-color: #2a2a2a;
+    background-color: #2a2a2a;
+    border-bottom: none;
+    margin: 0 -2px;
 }
 
 div#streams {
-    width: 320px;
-    max-height: 400px;
+    width: 310px;
+    max-height: 392px;/*13 elements (13*30px+2px)*/
+
     overflow-y: scroll;
     overflow-x: hidden;
-    margin: 0;
-    padding: 0;
+    border-top: none;
+    padding:0;
+    margin: 0 -2px -2px -2px;
 }
 
-ul#streams { 
-	list-style: none; 
-	width:300px;
-	margin:0;
-	padding:0;
-    font-family:Georgia, Times, serif; 
-    font-size:14px; 
+ul#streams {
+    font-size:14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    list-style: none;
+
+    margin:0;
+    padding:0;
+}
+
+ul#streams a {
+    line-height:30px;
+
+    text-decoration:none;
+    cursor:pointer;
+    overflow:hidden;
+    display:block; 
+
+    -webkit-transition: margin 0.5s ease-out;
+    -moz-transition: margin 0.5s ease-out;
+    -o-transition: margin 0.5s ease-out;
+    /*background-color:#FFFFFF; 
+    border-bottom-style:solid;
+    border-bottom-width:1px;
+    border-bottom-color:#CCCCCC;*/
+ }
+
+ul#streams a:nth-child(even) {
+    background-color:#F5F5F5;
+}
+
+ul#streams a:nth-child(odd) {
+    background-color: #FCFCFC;
+}
+
+/*should out point nth-child selector*/
+ul#streams a:hover {
+    background-repeat:repeat-x;
+    background-color: #D6CBBC;
+    padding: 2px 0;
 }
 
 li.stream {
-	position: relative;
-	overflow:hidden;
-    /*-moz-column-gap: 20;
-    -moz-column-count: 3;
-    -moz-column-width: auto;
-    -webkit-column-count: 3;
-    -webkit-column-gap: 20;
-    -webkit-column-width: auto;
-    column-count: 3;
-    column-gap: 20;
-    overflow: none;*/
-}
-
-ul#streams a { 
-	display:block; 
-	text-decoration:none; 
-	color:#000000; 
-	background-color:#FFFFFF; 
-	line-height:30px;
-  	border-bottom-style:solid;
-  	border-bottom-width:1px;
-  	border-bottom-color:#CCCCCC;
-  	padding-left:10px;
-  	cursor:pointer;
-	overflow: hidden;
- }
-
-ul#streams a:hover {
-	background-repeat:repeat-x;
-	background-color: #91E7FF;
+    position: relative;
+    overflow:hidden;
 }
 
 li.stream span.stream-text {
-	max-width: 265px;
-	display: block;
-	float: left;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    max-width: 266px;
+    padding-left: 4px;
+
+    display: block;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 li.stream span.stream-title {
+    color: #141414;
 }
 
 li.stream span.stream-name {
-	padding-right: 10px;
-	float:left;
-	font-size: 16px;
+    padding-right: 10px;
+
+    font-size: 16px;
+    color: #000000;
+    text-shadow: 0 0 1px #A8A8A8; /*may look weird on some names*/
+    
+    float:left;
 }
 
 li.stream span.stream-view-count {
-	width: 24px;
-	display: block;
-	float: right;
-	color: #666;
-	text-align: right;
-	font-size:12px;
+    width: 24px;
+    padding-right: 4px;
+
+    font-size:12px;
+    color: #535353;
+
+    display: block;
+    float: right;
+    text-align: right;
+}
+
+span#no-streams{
+    text-align: center;
 }

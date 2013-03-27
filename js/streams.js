@@ -3,8 +3,10 @@ $(function(undefined) {
     var streamlist = $('ul#streams'),
         liveStreams = [],
         header = $('div#tftv-logo'),
-        tftvURL = "http://teamfortress.tv",
-        streamURL = "http://teamfortress.tv/rss/streams";
+        options = {/*refreshInterval:val,
+            streamURL: val,
+            tftvURL: val,
+            badgeColour: val*/}, tfs = {};
 
     function Stream(name, title, link, viewers) {
         this.name = name;
@@ -25,23 +27,9 @@ $(function(undefined) {
         return this.viewers;
     };
 
-    //get streams from tf.tv
-    function getStreams(fun) {    
-        console.time("Fetching streams");
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", streamURL, true);
-        xhr.onreadystatechange = (function() {
-            if (xhr.readyState === 4) { //when retrieved
-                console.timeEnd("Fetching streams")
-                //callback
-                fun(xhr.responseText);
-            }
-        });
-        xhr.send(); //fetch
-    }
-
     //parses xml and forms stream list
     function streamsFromXML(xml) {
+        console.log(xml);
         console.time('parse xml');
         var doc = $.parseXML(xml),
                     streams = $(doc).find('stream'), stream;
@@ -59,15 +47,19 @@ $(function(undefined) {
 
     function buildStreamList(streams) {
         console.time('Build stream list');
-        var link, item, text, name, title, viewers;
-        $.each(streams, function(index, stream) {
+        var link, item, text, name, title, viewers, stream;
+
+        /*sorting here if needed*/
+        for (var i = 0; streams.length - 1; i++) {
+            stream = streams[i];
+
             name = document.createElement('span');
             name.className = 'stream-name';
-            name.innerText = stream.getName();
+            name.textContent = stream.getName();
 
             title = document.createElement('span');
             title.className = 'stream-title';
-            title.innerText = stream.getTitle();
+            title.textContent = stream.getTitle();//fix: content to prevent html tags from being execd
 
             text = document.createElement('span');
             text.className = 'stream-text';
@@ -84,31 +76,56 @@ $(function(undefined) {
             item.appendChild(viewers);
 
             link = $('<a>');
-            link.attr('stream-loc', stream.getLink()).attr('title', stream.getTitle());
-            link.append(item);
-            //redirect on click to url
-            link.click(function (ev) {
-                var url = $(ev.currentTarget).attr('stream-loc'); //ext cant have inlines
-                chrome.tabs.create({'url': url}, function(tab) {
-                    //redirect actions
-                });
+            link.attr('stream-link', stream.getLink()).attr('title', stream.getTitle());
+            link.click(streamRedirect);
+            link.hover(function() {
+                // Stuff to do when the mouse enters the element;
+
+            }, function() {
+                // Stuff to do when the mouse leaves the element;
+                
             });
+            link.append(item);
+
             //console.log("name: " + stream.getName() + " viewers: " + stream.getViewers());
             streamlist.append(link); //if tf.tv gets a million streamers this script has bigger problems
-        });
-        chrome.browserAction.setBadgeText({text: (streams.length).toString()});
+        };
+
+        if(streams.length === 0) {
+            text = document.createElement('span');
+            text.id = 'no-streams';
+            text.textContent = "Service responded with no services...";
+
+            item = document.createElement('li');
+            item.className = 'stream';
+            item.appendChild(text);
+
+            streamlist.append(item);
+        }
+        
         console.timeEnd('Build stream list');
+    }
+
+    //ext cant have inlines so you have to do it like this
+    //redirects user to stream on a linked event. assumes attr stream-link set
+    function streamRedirect(ev) {
+        var url = $(ev.currentTarget).attr('stream-link');
+        chrome.tabs.create({'url': url}, function(tab) {
+            //redirect actions
+        });
     }
 
     //start doing stuff
     (function init() {
+        tfs = chrome.extension.getBackgroundPage().tf.streams;
+        options = tfs.options;
+
         header.click(function(ev) {
-            chrome.tabs.create({'url': tftvURL}, function(tab) {
+            chrome.tabs.create({'url': optionoptions.s.tftvURL}, function(tab) {
                 //redirect actions
             });
         });
-        chrome.browserAction.setBadgeBackgroundColor({color: '#D7EFFA'});
         streamlist.empty();
-        getStreams(streamsFromXML);
+        tfs.getStreams(streamsFromXML);
     })();
 })
