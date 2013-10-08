@@ -1,24 +1,123 @@
 <!doctype html>
-<html lang="en">
+<html lang='en'>
 <head>
-	<meta charset="UTF-8">
+	<meta charset='UTF-8'>
 	<title>TF Stream Options</title>
-	<link rel="stylesheet" href="css/options.css">
-	<script src="js/jquery-1.9.1.min.js"></script>
-	<script src="js/options.js"></script>
+
+	<link rel='stylesheet' href='css/options.css'>
+
+	<script src="js/zepto.min.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/browser/chrome.js"></script>
+	<script src='js/tf.options.js'></script>
 </head>
 <body>
-	<form action='' method='post'>
+	<form id='options' method='post'>
 		<fieldset>
-			<legend>Stream App options</legend>
-			<div class="option">
-				<label for='txtRefresh' title="How often to poll the teamfortress.tv service for new live streams">Refresh time 
-                    <input type='number' name='refresh' id='txtRefresh'>&nbsp(seconds) 
-				    <label for='chkRefresh'><input type='checkbox' id='chkRefresh'> Disabled</label>
-                </label>
+			<legend>Ugly as all fuck Stream App Form</legend>
+			<h2>General Settings</h2>
+			<span id='descr'>Do your worst...</span>
+			<div id="standard">
+				
 			</div>
-			<input type='submit'>
+			<br/>
+			<div id="subscriptions">
+				<h2>Subscriptions</h2>
+			</div>
+			<br/>
+			<div id='customs'>
+				<h2>Your options:</h2>
+				<span id='descr'></span>
+				<div class='tooltip'>
+					<!-- TODO Pretty printing and linking to form events -->
+					<textarea name='custom' id='custom' cols='60' rows='20'></textarea>
+					<span class='tip'>JSON representation of your customizable options.<br/>If you fuck up you can just reset to defaults</span>
+				</div>
+				<input type='button' id='submit-options' value='Update your options'>
+				<input type='button' id='reset' value="Revert to Defaults">
+			</div>
+			<a href="https://github.com/megawac/tfstreams">Github repo</a>
 		</fieldset>
 	</form>
+
+	<script id="options-template" type="template">
+		<div class='option tooltip' data-option='refreshInterval'>
+			<span class='opt'><strong>Refresh time</strong> (seconds):</span>
+			<div class='options'>
+                <input type='number' value="{{refreshInterval}}">
+			</div>
+			<span class='tip'>How often to poll teamfortress.tv for live streams updates.<br />If disabled (0), your extension icon will not have a stream count (currently takes a restart).</span>
+		</div>
+		<div class='option tooltip'>
+			<span><strong>Enable Notifications</strong>: </span>
+			<input type='checkbox' {{#notifications.enable}}checked{{/notifications.enable}} data-option="notifications.enable">
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span>Display duration</span>
+			<input type="number" value="{{notifications.duration}}" data-option="notifications.duration">
+			<span class='tip'>Whether to make a notification when a subscribed stream comes online. Duration refers to how long the pop up will be shown</span>
+		</div>
+		<div class='option tooltip' data-option='colours.badge'>
+			<span class='opt'><strong>Stream Count Badge Colour</strong>: </span>
+			<div class='options'>
+                <input type='color' value={{colours.badge}}>
+				<input type='button' value='Default' class='default'>
+			</div>
+			<span class='tip'>The badge colour (for stream count) on the extension icon.</span>
+		</div>
+		<div class='option tooltip' data-option='colours.logo'>
+			<span class='opt'><strong>Logo Background</strong>:</span>
+			<div class='options'>
+                <input type='color' value="{{colours.logo}}">
+				<input type='button' value='Default' class='default'>
+			</div>
+			<span class='tip'>The colour of the TF.tv banner</span>
+		</div>
+		<div class='option tooltip' data-option='colours.hover'>
+			<span class='opt'><strong>Stream Hover Colour</strong>:</span>
+			<div class='options'>
+                <input type='color' value="{{colours.hover}}">
+				<input type='button' value='Default' class='default'>
+			</div>
+			<span class='tip'>The highlighter's colour when hovering over streams</span>
+		</div>
+		<div class='option tooltip'>
+			<span class='opt'><strong>Stream Background</strong>:</span>
+			<div class='options'>
+                <span>Even Streams</span><input type="color" value="{{colours.listEven}}" data-option="colours.listEven">
+                <span>Odd Streams</span><input type="color" value="{{colours.listOdd}}" data-option="colours.listOdd">
+			</div>
+			<span class="tip">The alternating background colour behind stream names</span>
+		</div>
+		<div class="option">
+			<h2>Text settings</h2>
+			<div id="names">
+				<strong>Streamer Name</strong>
+				<input type="color" value="{{text.name.colour}}" data-option="text.name.colour">
+				<span>Font Size (px):&nbsp;<input type="number" value="{{text.name.fontsize}}" data-option="text.name.fontsize"></span>
+                <span>Bold:&nbsp;<input type="checkbox" {{#text.name.bold}}checked{{/text.name.bold}} data-option="text.name.bold"></span>
+			</div>
+			<div id="title">
+				<strong>Stream Title</strong>
+				<input type="color" value="{{text.title.colour}}" data-option="text.title.colour">
+				<span>Font Size (px):&nbsp;<input type="number" value="{{text.title.fontsize}}" data-option="text.title.fontsize"></span>
+                <span>Bold:&nbsp;<input type="checkbox" {{#text.title.bold}}checked{{/text.title.bold}} data-option="text.title.bold"></span>
+			</div>
+			<div id="views">
+				<strong>Stream View Count</strong>
+                <input type="color" value="{{text.views.colour}}" data-option="text.views.colour">
+				<span>Font Size (px):&nbsp;<input type="number" value="{{text.views.fontsize}}" data-option="text.views.fontsize"></span>
+                <span>Bold:&nbsp;<input type="checkbox" {{#text.views.bold}}checked{{/text.views.bold}} data-option="text.views.bold"></span>
+			</div>
+		</div>
+	</script>
+	<script id="subscribe-template" type="template">
+		{{#subscriptions}}
+			<div class="subscription" data-stream={{name}}>
+				Streamer: <span class="name">{{name}}</span>
+				Link: <span class="link">{{link}}</span>
+				<input class="unsubscribe" type="button" value="Unsubscribe">
+			</div>
+		{{/subscriptions}}
+	</script>
 </body>
 </html>

@@ -5,12 +5,14 @@
 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="EXPIRES" CONTENT="0">
-	<!-- <META HTTP-EQUIV="REFRESH" CONTENT="15"> -->
+	<!-- <META HTTP-EQUIV="REFRESH" CONTENT="20"> -->
 	<title>teamfortress.tv streams</title>
 	
 	<link rel="stylesheet" href="css/streams.css">
-	<script src="js/jquery-1.9.1.min.js"></script>
-	<script src="js/streams.js"></script>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/browser/chrome.js"></script>
+	<script src="js/tf.streams.js"></script>
 </head>
 <body>
 <div id="tftv-logo">
@@ -19,7 +21,71 @@
 	</a>
 </div>
 <div id="streams">
-	<ul id="streams"></ul>
+	<ul id="streamlist"></ul>
+	<span id="error" style="display:none">Something somewhere went wrong. No streams were returned...<br/>Check
+		<a href='http://teamfortress.tv/rss/streams'>teamfortress.tv/rss/streams</a>
+		before blaming me.
+	</span>
 </div>
 </body>
+
+<script id="styles" type="template">
+	body {
+		font-family: {{text.font}};
+	}
+	#tftv-logo {
+		background-color: {{colours.logo}};
+	}
+	#streamlist {
+		max-height: {{listHeight}}px;
+	}
+	#streamlist a:nth-child(even) {
+		background-color: {{colours.listEven}};
+	}
+	#streamlist a:nth-child(odd) {
+		background-color: {{colours.listOdd}};
+	}
+	#streamlist a:hover {
+		background-color: {{colours.hover}} !important;/*outscore odd even*/
+	}
+	#streamlist li {
+		line-height: {{itemHeight}}px;
+	}
+	.stream .stream-name {
+		font-size: {{text.name.fontsize}}px !important;
+		color: {{text.name.colour}} !important;
+		width: {{text.name.width}}px !important;
+		{{#text.name.bold}}font-weight:bold;{{/text.name.bold}}
+	}
+	.stream .stream-title {
+		font-size: {{text.title.fontsize}}px !important;
+		color: {{text.title.colour}} !important;
+		width: {{text.title.width}}px !important;
+		max-width: {{title-size}}px !important;
+		{{#text.title.bold}}font-weight:bold;{{/text.title.bold}}
+	}
+	.stream .stream-view-count {
+		font-size: {{text.views.fontsize}}px !important;
+		color: {{text.views.colour}} !important;
+		width: {{text.views.width}}px !important;
+		{{#text.views.bold}}font-weight:bold;{{/text.views.bold}}
+	}
+	.subscribe {
+		margin-top: {{subscriberMT}}px;
+    }
+</script>
+<script id="stream-list" type="template">
+	{{#streams}}
+		<a class="stream" stream-link="{{link}}" stream-name="{{name}}" title="{{title}}">
+			<li>
+				<span class="subscribe {{#subscribed}}favourite{{/subscribed}}"></span>
+				<span class="stream-text">
+					<span class="stream-name">{{name}}</span>
+					<span class="stream-title">{{title}}</span>
+				</span>
+				<span class="stream-view-count">{{viewers}}</span>
+			</li>
+		</a>
+	{{/streams}}
+</script>
 </html>

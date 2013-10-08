@@ -1,8 +1,11 @@
 body {
+    /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+    /*font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;*/
 }
 
+/*TODO margins on scrollbars*/
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
  
 ::-webkit-scrollbar-track {
@@ -11,25 +14,24 @@ body {
 }
  
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.5); 
+    border-radius: 10px;
 }
 
-div#tftv-log, div#streams {
+#tftv-logo {
+    border-bottom: none;
+    margin: 0 -2px;
+}
+
+#tftv-log, #streams {
     border-style:solid;
     border-width:1px;
     border-color:#CCCCCC;
 }
 
-div#tftv-logo {
-    background-color: #2a2a2a;
-    border-bottom: none;
-    margin: 0 -2px;
-}
 
-div#streams {
+#streams {
     width: 310px;
-    max-height: 392px;/*13 elements (13*30px+2px)*/
 
     overflow-y: scroll;
     overflow-x: hidden;
@@ -38,17 +40,16 @@ div#streams {
     margin: 0 -2px -2px -2px;
 }
 
-ul#streams {
-    font-size:14px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+#streamlist {
     list-style: none;
 
     margin:0;
-    padding:0;
+    padding: 0;
 }
 
-ul#streams a {
-    line-height:30px;
+#streamlist a {
+    /*line-height:2;*//*TODO change to ems*/
+    /*vertical-align: text-bottom;*/
 
     text-decoration:none;
     cursor:pointer;
@@ -58,34 +59,31 @@ ul#streams a {
     -webkit-transition: margin 0.5s ease-out;
     -moz-transition: margin 0.5s ease-out;
     -o-transition: margin 0.5s ease-out;
-    /*background-color:#FFFFFF; 
-    border-bottom-style:solid;
-    border-bottom-width:1px;
-    border-bottom-color:#CCCCCC;*/
- }
+}
 
-ul#streams a:nth-child(even) {
+/*#streamlist a:nth-child(even) {
     background-color:#F5F5F5;
 }
 
-ul#streams a:nth-child(odd) {
+#streamlist a:nth-child(odd) {
     background-color: #FCFCFC;
-}
+}*/
 
-/*should out point nth-child selector*/
-ul#streams a:hover {
+#streamlist a:hover {
     background-repeat:repeat-x;
-    background-color: #D6CBBC;
-    padding: 2px 0;
+    padding: 1px 0;
 }
 
-li.stream {
+.stream {
     position: relative;
     overflow:hidden;
+    vertical-align: middle;
+    display: block;
+    box-shadow: 3px 1px 2px #888888;
 }
 
-li.stream span.stream-text {
-    max-width: 266px;
+.stream .stream-text {
+    max-width: 254px;
     padding-left: 4px;
 
     display: block;
@@ -95,32 +93,42 @@ li.stream span.stream-text {
     white-space: nowrap;
 }
 
-li.stream span.stream-title {
-    color: #141414;
+.stream .stream-title {
 }
 
-li.stream span.stream-name {
+.stream .stream-name {
     padding-right: 10px;
-
-    font-size: 16px;
-    color: #000000;
-    text-shadow: 0 0 1px #A8A8A8; /*may look weird on some names*/
-    
+    text-shadow: 0 0 .5px #A8A8A8;
     float:left;
 }
 
-li.stream span.stream-view-count {
+.stream .stream-view-count {
     width: 24px;
     padding-right: 4px;
-
-    font-size:12px;
-    color: #535353;
-
-    display: block;
+    
+    display: inline-block;
     float: right;
     text-align: right;
 }
 
-span#no-streams{
+#error {
+    color: red;
     text-align: center;
+    display: block;
+}
+
+.subscribe {
+    background-image:url('../img/unfavourite2.png');
+    width:16px; 
+    height:16px;
+    display: block;
+    float: left;
+}
+
+.subscribe.favourite {
+    background-image:url('../img/favourite2.png');
+}
+
+.subscribe:hover {
+    background-image:url('../img/fav_hover.png');
 }

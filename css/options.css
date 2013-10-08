@@ -3,10 +3,105 @@ body {
 }
 
 div.option {
-	
+	margin: 10px 20px;
+    text-align: left;
+    vertical-align: middle;
+    display: block;
+}
+
+div.options {
+    display: inline-block;
 }
 
 input[type="number"] {
 	width: 50px;
 	text-align: right;
+}
+input[type="color"] {
+    height:20px;
+    margin-bottom: -9px;
+}
+
+h2 {
+    text-decoration: underline;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+span#descr {
+    padding-left: 30px;
+    padding-top: -5px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+textarea#custom {
+    resize: both;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+div#fonts div strong {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+}
+
+div#fonts div span {
+    margin: 0 5px;
+    display: inline-block;
+}
+
+.subscription .name {
+    font-weight: bold;
+}
+
+
+div.option span.opt {
+    vertical-align: middle;
+    display: inline-block;
+    width:195px;
+    margin-right: 10px;
+}
+
+div.tooltip {
+    outline: none;
+}
+div.tooltip strong {
+    line-height: 30px;
+}
+div.tooltip:hover {
+    text-decoration: none;
+}
+div.tooltip span.tip {
+    display: none;
+    float: right;
+    line-height: 16px;
+    margin-left: 28px;
+    margin-top: -10px;
+    padding: 14px 20px;
+    width: 240px;
+    z-index: 10;
+
+    -moz-border-radius: 4px;
+    -moz-box-shadow: 5px 5px 8px #ccc;
+    -webkit-border-radius: 4px;
+    -webkit-box-shadow: 5px 5px 8px #ccc;
+    border-radius: 4px;
+    box-shadow: 5px 5px 8px #ccc;
+}
+div.tooltip:hover span.tip {
+    background: #fffaf0;
+    border: 1px solid #dca;
+    color: #111;
+    display: inline;
+    position: absolute;
+}
+.callout {
+    border: 0px;
+    left: -12px;
+    position: absolute;
+    top: 30px;
+    z-index: 20;
 }
