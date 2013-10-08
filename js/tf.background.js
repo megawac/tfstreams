@@ -82,7 +82,7 @@
 
             lastList = [],
 
-            initing = true,
+            initing = false,
 
             subscriptions = getItem("subscriptions", {
                 "TeamFortressTV": {//you get auto subscribed to tftv ;)

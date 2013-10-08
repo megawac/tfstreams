@@ -15,7 +15,9 @@ $(function() {
         //background page
         streams = tf.streams,
         options = streams.options,
-        defaults = streams.defaultOptions;
+        defaults = streams.defaultOptions,
+
+        template = Mustache.compile($("#options-template").html());
 
     // https://gist.github.com/megawac/6162481
     function assign(obj, key, value) {
@@ -116,7 +118,7 @@ $(function() {
 
     function render() {
         updateCustoms();
-        $standard.html(Mustache.render($("#options-template").html(), options));
+        $standard.html(template(options));
     }
 
     function renderSubs() {
@@ -149,7 +151,13 @@ $(function() {
         .on("change", "[data-option='refreshInterval']", streams.startRefresh)
         .on("click", ".default", setDefault)
         .on("click", "[data-option='colours.badge']", updateBadge)
-        .on("change", "[data-option='colours.badge']", updateBadge);
+        .on("change", "[data-option='colours.badge']", updateBadge)
+        .on("click", "#testnotice", function() {
+            tf.browser.notify({
+                title: "Test Notice!",
+                message: "This is a test notification"
+            })
+        });
 
     $subscriptions.on("click", ".subscription .unsubscribe", function() {
         var $par = $(this).parents(".subscription");

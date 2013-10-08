@@ -2,7 +2,7 @@
 $(function() {
     "use strict";
     var doc = document;
-    var $streamlist = $('#streamlist'),
+    var $streamlist = $('ul.streams'),
         tfs = tf.streams,//background stuff
         options = tfs.options,
         template;
@@ -54,11 +54,12 @@ $(function() {
 
             lineHeight = max * text.lineHeight;
 
-        var context = tfs.merge({}, options, {
+        var context = tfs.merge({
             itemHeight: lineHeight,
             listHeight: options.streamsPerPage * lineHeight,
-            subscriberMT: (lineHeight - 16) /2
-        });
+            subscriberMT: (lineHeight - 16) /2,
+            textWidth: options.notifications.enable ? 264 : 280//hiding the favourite icon
+        }, options);
 
         var css = Mustache.render($("#styles").html(), context);
 
