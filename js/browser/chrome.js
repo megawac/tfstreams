@@ -1,16 +1,15 @@
 //vendor specific crap
 (function() {
     var back = chrome.extension.getBackgroundPage(),
-        tf = (back.tf = back.tf || {});
+        tf =  window.tf = (back.tf = back.tf || {});
 
     function noop(){}
-    window.tf = tf;
 
     var noticeid = 0;
 
     if(!tf.browser) {
         //vendor dependendant functions
-        tf.browser = {
+        var browser = tf.browser = {
         
             openTab: function(url, action) {
                 chrome.tabs.create({'url': url}, action);
@@ -66,11 +65,73 @@
                 chrome.notifications.create(id, opts, callback||noop);
 
                 if(duration) {
-                    setTimeout(notice.close, duration);
+                    tf.browser.delay(notice.close, duration);
                 }
 
                 return notice;
             },
+
+            //todo abstract the alarms api
+            delay: function(fn, delay) {
+                var id = setTimeout(fn, delay);
+                return {
+                    id: id,
+                    clear: function() {
+                        clearTimeout(id);
+                    }
+                };
+            },
+
+            throttle: function(fn, interval) {
+                var id = setInterval(fn, interval);
+
+                return {
+                    id: id,
+                    clear: function() {
+                        clearInterval(id);
+                    }
+                };
+            },
+
+            storage: {
+                //assumes non blocking but can be local storage
+                //Get an item from storage returns a native object
+                getItem: function(key, cb) {
+                    //cb must be specified or you get a thrown error!
+                    chrome.storage.sync.get(key, function(data) {
+                        var res = data[key];
+                        if(res) {
+                            cb(res);
+                        } else {
+                        //temporary condition for the transition to the storage api. TODO remove next version
+                        //gets old data and stores it in the new api
+                            res = localStorage.getItem(key);
+                            cb(res);
+                            if(res) {
+                                browser.storage.setItem(key, res);
+                                localStorage.removeItem(key);
+                            }
+                        }
+                    });
+                },
+
+                //store an item in storage
+                //takes an obj and a callback 
+                //or a string, object and callback
+                setItem: function(key, obj, cb) {
+                    if(typeof key === "object") {
+                        chrome.storage.sync.set(key, obj || noop);//object is assumed callback
+                    } else {
+                        var data = {};
+                        data[key] = obj;
+                        browser.storage.setItem(data, cb);
+                    }
+                },
+
+                removeItem: function(key, cb) {
+                    chrome.storage.removeItem(key, cb || noop);
+                }
+            }
 
 
         };

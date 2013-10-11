@@ -45,15 +45,8 @@ $(function() {
     }
 
 
-    function storeOptions(obj) {
-        var item;
-        if (typeof obj === "string") { //assume already json
-            item = obj;
-        } else {
-            item = JSON.stringify(obj);
-        }
-
-        localStorage.setItem('options', item);
+    function storeOptions(item) {
+        tf.browser.storage.setItem('options', item);
     }
 
     function resetForm() {
@@ -81,7 +74,6 @@ $(function() {
 
     //listener to dynamically change options
     //object is source obj, prop is property name
-
     function changePropEvent(prop) {
         var tar = this,
             $tar = $(this),
@@ -170,11 +162,11 @@ $(function() {
         try {
             opts = JSON.parse(json);
             tf.merge(options, opts);
+            storeOptions(opts);
+            render();
         } catch (err) {
             alert('Your Json sucks... Heres why: \n' + err);
         }
-        storeOptions(json);
-        render();
     });
 
     //wire up submit
