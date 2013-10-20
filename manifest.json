@@ -1,18 +1,10 @@
 {
-<<<<<<< HEAD
    "version": "1.2.5",
    "manifest_version": 2,
 
    "description": "Stream aggregator using teamfortress.tv (tf.tv). Grabs streams from http://teamfortress.tv/rss/streams",
    "name": "Teamfortress.tv Stream List",
    "short_name": "TF.TV Streams",
-=======
-   "version": "1.2.3",
-   "manifest_version": 2,
-
-   "description": "Stream aggregator using teamfortress.tv (tf.tv). Grabs streams from http://teamfortress.tv/rss/streams",
-   "name": "Teamfortress.tv Streams",
->>>>>>> 95bf111db59640a0860dfc79567715dbc0ec4734
    "author": "Graeme Yeates(megawac)",
 
    "update_url": "http://clients2.google.com/service/update2/crx",

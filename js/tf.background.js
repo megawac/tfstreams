@@ -185,27 +185,19 @@
             tf.merge(options, defaults);
 
             tf.browser.storage.getItem('options', function(data) {
-<<<<<<< HEAD
                 if(typeof data !== "string") {
                     tf.merge(options, data);
                 } else {
                     tf.merge(options, JSON.parse(data));
                     tf.browser.storage.setItem('options', options);//invalid
-=======
-                if(data) {
-                    tf.merge(options, data);
->>>>>>> 95bf111db59640a0860dfc79567715dbc0ec4734
                 }
             });
 
             tf.browser.storage.getItem("subscriptions", function(data) {
-<<<<<<< HEAD
                 if(typeof data == "string") {//invalid
                     data = JSON.parse(data);
                     tf.browser.storage.setItem("subscriptions", data);
                 }
-=======
->>>>>>> 95bf111db59640a0860dfc79567715dbc0ec4734
                 subscriptions = tf.streams.subscriptions = data || {
                     "TeamFortressTV": {//you get auto subscribed to tftv by default ;)
                         link: "teamfortress.tv/streams/view/TeamFortressTV"
