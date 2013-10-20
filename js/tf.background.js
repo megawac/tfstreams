@@ -19,14 +19,6 @@
         return o1;
     });
 
-    function getItem(name, def) {
-        var item = localStorage.getItem(name);
-        if(item) {
-            return JSON.parse(item);
-        } else {
-            return def;
-        }
-    }
 
     //checks how many streams are live every 60 seconds & updates badge
     //Im not sure how expensive these pages are need to find some benchmarks before i start including libs
@@ -84,16 +76,11 @@
 
             initing = true,
 
-            subscriptions = getItem("subscriptions", {
-                "TeamFortressTV": {//you get auto subscribed to tftv ;)
-                    link: "teamfortress.tv/streams/view/TeamFortressTV"
-                }
-            }),
+            subscriptions,
 
             lock;
 
 
-        //todo put this stuff in background
         function Stream(name, title, link, viewers) {
             this.name = name;
             this.title = title;
@@ -112,7 +99,7 @@
                 if (xhr.readyState === 4) { //when retrieved
                     // console.timeEnd("Fetching streams");
                     //callback
-                    return fun(xhr.responseXML);
+                    return fun(xhr.responseXML || xhr.response);
                 }
             });
             xhr.send(); //fetch
@@ -154,7 +141,7 @@
         }
 
         function cancelRefresh() {
-            clearInterval(lock);
+            if(lock) lock.clear();
             tf.browser.updateBadge({text:''});
             // console.log('cancelling refresh. Prev interval ' + options.refreshInterval);
         }
@@ -163,7 +150,7 @@
             cancelRefresh(); //safety
             if(isFinite(options.refreshInterval) && options.refreshInterval > 0) {
                 refresh();
-                lock = setInterval(refresh, options.refreshInterval * 1000);
+                lock = tf.browser.throttle(refresh, options.refreshInterval * 1000);
             } else {
                 tf.browser.updateBadge({text:''});
             }
@@ -175,14 +162,14 @@
                 unsubscribe(name);
             } else {
                 subscriptions[name] = data;
-                localStorage.setItem("subscriptions", JSON.stringify(subscriptions));
+                tf.browser.storage.setItem("subscriptions", subscriptions);
             }
         }
 
         function unsubscribe(name) {
             if(subscriptions.hasOwnProperty(name)) {
-                delete subscriptions[name]
-                localStorage.setItem("subscriptions", JSON.stringify(subscriptions));
+                delete subscriptions[name];
+                tf.browser.storage.setItem("subscriptions", subscriptions);
             }
         }
 
@@ -197,11 +184,26 @@
         function getLocalOptions() {
             tf.merge(options, defaults);
 
-            var userOptions = localStorage.getItem('options'), opts;
-            if(userOptions) {
-                opts = JSON.parse(userOptions);
-                tf.merge(options, opts);
-            }
+            tf.browser.storage.getItem('options', function(data) {
+                if(typeof data !== "string") {
+                    tf.merge(options, data);
+                } else {
+                    tf.merge(options, JSON.parse(data));
+                    tf.browser.storage.setItem('options', options);//invalid
+                }
+            });
+
+            tf.browser.storage.getItem("subscriptions", function(data) {
+                if(typeof data == "string") {//invalid
+                    data = JSON.parse(data);
+                    tf.browser.storage.setItem("subscriptions", data);
+                }
+                subscriptions = tf.streams.subscriptions = data || {
+                    "TeamFortressTV": {//you get auto subscribed to tftv by default ;)
+                        link: "teamfortress.tv/streams/view/TeamFortressTV"
+                    }
+                };
+            });
         }
 
         getLocalOptions();

@@ -6,7 +6,7 @@
 
 	<link rel='stylesheet' href='css/options.css'>
 
-	<script src="js/zepto.min.js"></script>
+	<script src="js/zepto.js"></script>
 	<script src="js/mustache.js"></script>
 	<script src="js/browser/chrome.js"></script>
 	<script src='js/tf.options.js'></script>
@@ -54,6 +54,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<span>Display duration</span>
 			<input type="number" value="{{notifications.duration}}" data-option="notifications.duration">
+			<input id="testnotice" type="button" value="Test">
 			<span class='tip'>Whether to make a notification when a subscribed stream comes online. Duration refers to how long the pop up will be shown</span>
 		</div>
 		<div class='option tooltip' data-option='colours.badge'>

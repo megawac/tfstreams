@@ -1,8 +1,9 @@
 //Prototype light XML parser allowing $esque chaining for modern browsers. Assumes implemented ecma standard
 //http://caniuse.com/queryselector
-; (function(ns, document) {
+; (function(ns) {
     "use strict";
     var notWhiteSpace = /[^ \f\n\r\t\v]/,
+        invalidxml = new RegExp("[^\\u0009\\u000a\\u000d\\u0020-\\uD7FF\\uE000-\\uFFFD]", "g"),
         //config options
         options = {
             keepRaw: false
@@ -56,19 +57,20 @@
         }
     }
 
-    //parse an xml string into an xml document
+    //parse an xml string into an xm
     CXML.parseXML = function( data ) {
         if ( !data || typeof data !== "string" ) {
             return null;
         }
+        var xmlstring = data.replace(invalidxml, "");//strip invalid characters
         var xml, tmp;
         if (window.DOMParser) {
             tmp = new DOMParser();
-            xml = tmp.parseFromString( data , "text/xml" );
+            xml = tmp.parseFromString( xmlstring , "text/xml" );
         } else { //ie 8-... Interestingly jQuery no longer supports this
             xml=new ActiveXObject("Microsoft.XMLDOM");
             xml.async=false;
-            xml.loadXML(data);
+            xml.loadXML(xmlstring);
         }
         if ( !xml || !xml.documentElement || xml.getElementsByTagName( "parsererror" ).length ) {
             throw new Error( "Invalid XML: " + data );
@@ -186,14 +188,14 @@
     *******************/
     // CXML.toXML = function(obj, options) {
     //     var serializer,
-    //         imp = document.implementation,
+    //         imp .implementation,
     //         type = typeof obj,
     //         doc;
 
     //     if(imp) {
     //         doc = imp.createDocument(options.namespace, options.head, DocumentType.DOCUMENT_NODE);
     //     } else {
-    //         doc = document.open();
+    //         doc .open();
     //     }
 
     //     // function that creates the XML structure
@@ -268,7 +270,7 @@
     // *   Breaks if passed array
     // */
     // //See https://developer.mozilla.org/en-US/docs/DOM/Node for node stuff
-    // //xml is an xml formed node or document
+    // //xml is an xml formed node o
     // //keepRaw specifies whether cdata and text nodes should be removed
     // function toObj(xml, keepRaw) {
     //     var obj = {},
@@ -491,4 +493,4 @@
             ns[module] = _original;
         }
     })()
-})(this.tf = this.tf || {}, document);
+})(this.tf = this.tf || {});

@@ -9,7 +9,7 @@
 	<title>teamfortress.tv streams</title>
 	
 	<link rel="stylesheet" href="css/streams.css">
-	<script src="js/zepto.min.js"></script>
+	<script src="js/zepto.js"></script>
 	<script src="js/mustache.js"></script>
 	<script src="js/browser/chrome.js"></script>
 	<script src="js/tf.streams.js"></script>
@@ -21,7 +21,7 @@
 	</a>
 </div>
 <div id="streams">
-	<ul id="streamlist"></ul>
+	<ul class="streams"></ul>
 	<span id="error" style="display:none">Something somewhere went wrong. No streams were returned...<br/>Check
 		<a href='http://teamfortress.tv/rss/streams'>teamfortress.tv/rss/streams</a>
 		before blaming me.
@@ -36,42 +36,48 @@
 	#tftv-logo {
 		background-color: {{colours.logo}};
 	}
-	#streamlist {
+	.streams {
 		max-height: {{listHeight}}px;
 	}
-	#streamlist a:nth-child(even) {
+	.streams a:nth-child(even) {
 		background-color: {{colours.listEven}};
 	}
-	#streamlist a:nth-child(odd) {
+	.streams a:nth-child(odd) {
 		background-color: {{colours.listOdd}};
 	}
-	#streamlist a:hover {
+	.streams a:hover {
 		background-color: {{colours.hover}} !important;/*outscore odd even*/
 	}
-	#streamlist li {
+	.streams li {
 		line-height: {{itemHeight}}px;
 	}
+
 	.stream .stream-name {
-		font-size: {{text.name.fontsize}}px !important;
-		color: {{text.name.colour}} !important;
-		width: {{text.name.width}}px !important;
+		font-size: {{text.name.fontsize}}px;
+		color: {{text.name.colour}};
+		width: {{text.name.width}}px;
 		{{#text.name.bold}}font-weight:bold;{{/text.name.bold}}
 	}
 	.stream .stream-title {
-		font-size: {{text.title.fontsize}}px !important;
-		color: {{text.title.colour}} !important;
-		width: {{text.title.width}}px !important;
-		max-width: {{title-size}}px !important;
+		font-size: {{text.title.fontsize}}px;
+		color: {{text.title.colour}};
+		width: {{text.title.width}}px;
+		max-width: {{title-size}}px;
 		{{#text.title.bold}}font-weight:bold;{{/text.title.bold}}
 	}
 	.stream .stream-view-count {
-		font-size: {{text.views.fontsize}}px !important;
-		color: {{text.views.colour}} !important;
-		width: {{text.views.width}}px !important;
+		font-size: {{text.views.fontsize}}px;
+		color: {{text.views.colour}};
+		width: {{text.views.width}}px;
 		{{#text.views.bold}}font-weight:bold;{{/text.views.bold}}
+	}
+
+	.stream .stream-text {
+		max-width: {{textWidth}}px;/*title and description*/
 	}
 	.subscribe {
 		margin-top: {{subscriberMT}}px;
+		{{^notifications.enable}}display: none;{{/notifications.enable}};
     }
 </script>
 <script id="stream-list" type="template">

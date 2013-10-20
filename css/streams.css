@@ -31,7 +31,7 @@ body {
 
 
 #streams {
-    width: 310px;
+    width: 320px;
 
     overflow-y: scroll;
     overflow-x: hidden;
@@ -40,17 +40,14 @@ body {
     margin: 0 -2px -2px -2px;
 }
 
-#streamlist {
+ul.streams {
     list-style: none;
 
     margin:0;
     padding: 0;
 }
 
-#streamlist a {
-    /*line-height:2;*//*TODO change to ems*/
-    /*vertical-align: text-bottom;*/
-
+ul.streams a {
     text-decoration:none;
     cursor:pointer;
     overflow:hidden;
@@ -61,15 +58,7 @@ body {
     -o-transition: margin 0.5s ease-out;
 }
 
-/*#streamlist a:nth-child(even) {
-    background-color:#F5F5F5;
-}
-
-#streamlist a:nth-child(odd) {
-    background-color: #FCFCFC;
-}*/
-
-#streamlist a:hover {
+ul.streams a:hover {
     background-repeat:repeat-x;
     padding: 1px 0;
 }
@@ -83,7 +72,6 @@ body {
 }
 
 .stream .stream-text {
-    max-width: 254px;
     padding-left: 4px;
 
     display: block;
@@ -93,9 +81,9 @@ body {
     white-space: nowrap;
 }
 
-.stream .stream-title {
-}
-
+ /*.stream .stream-title {
+}*/
+ 
 .stream .stream-name {
     padding-right: 10px;
     text-shadow: 0 0 .5px #A8A8A8;

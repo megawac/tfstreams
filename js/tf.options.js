@@ -15,7 +15,9 @@ $(function() {
         //background page
         streams = tf.streams,
         options = streams.options,
-        defaults = streams.defaultOptions;
+        defaults = streams.defaultOptions,
+
+        template = Mustache.compile($("#options-template").html());
 
     // https://gist.github.com/megawac/6162481
     function assign(obj, key, value) {
@@ -43,15 +45,8 @@ $(function() {
     }
 
 
-    function storeOptions(obj) {
-        var item;
-        if (typeof obj === "string") { //assume already json
-            item = obj;
-        } else {
-            item = JSON.stringify(obj);
-        }
-
-        localStorage.setItem('options', item);
+    function storeOptions(item) {
+        tf.browser.storage.setItem('options', item);
     }
 
     function resetForm() {
@@ -79,7 +74,6 @@ $(function() {
 
     //listener to dynamically change options
     //object is source obj, prop is property name
-
     function changePropEvent(prop) {
         var tar = this,
             $tar = $(this),
@@ -116,7 +110,7 @@ $(function() {
 
     function render() {
         updateCustoms();
-        $standard.html(Mustache.render($("#options-template").html(), options));
+        $standard.html(template(options));
     }
 
     function renderSubs() {
@@ -149,7 +143,13 @@ $(function() {
         .on("change", "[data-option='refreshInterval']", streams.startRefresh)
         .on("click", ".default", setDefault)
         .on("click", "[data-option='colours.badge']", updateBadge)
-        .on("change", "[data-option='colours.badge']", updateBadge);
+        .on("change", "[data-option='colours.badge']", updateBadge)
+        .on("click", "#testnotice", function() {
+            tf.browser.notify({
+                title: "Test Notice!",
+                message: "This is a test notification"
+            })
+        });
 
     $subscriptions.on("click", ".subscription .unsubscribe", function() {
         var $par = $(this).parents(".subscription");
@@ -162,11 +162,11 @@ $(function() {
         try {
             opts = JSON.parse(json);
             tf.merge(options, opts);
+            storeOptions(opts);
+            render();
         } catch (err) {
             alert('Your Json sucks... Heres why: \n' + err);
         }
-        storeOptions(json);
-        render();
     });
 
     //wire up submit
