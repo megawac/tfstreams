@@ -17,13 +17,13 @@
 
             updateBadge: function(options) {
                 var t = options.text,
-                    c = options.color;
+                    c = options.color||options.colour;
 
                 if(t !== undefined){
                     chrome.browserAction.setBadgeText({text: (t||'')});
                 }
                 if(c !== undefined) {
-                    chrome.browserAction.setBadgeBackgroundColor(options);
+                    chrome.browserAction.setBadgeBackgroundColor({color: c});
                 }
             },
 
@@ -50,7 +50,7 @@
                     type: "basic",
                     title: "",
                     message: "",
-                    iconUrl: "img/icon.png"
+                    iconUrl: "img/logo.png"
                 }, options);
                 var notice = {
                     id: id,
