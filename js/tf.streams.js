@@ -1,8 +1,7 @@
-
 $(function() {
     "use strict";
     var doc = document;
-    var $streamlist = $('ul.streams'),
+    var $streamlist = $("ul.streams"),
         tfs = tf.streams,//background stuff
         options = tfs.options,
         template;
@@ -13,12 +12,12 @@ $(function() {
         var doc = tf.XML(xml),
             xstream;
 
-        var live = doc.find('stream')
+        var live = doc.find("stream")
         .map(function (node) {
-            xstream = new tfs.Stream(node.first('name').val(),
-                                    node.first('title').val(),
-                                    node.first('link').val(),
-                                    node.first('viewers').val());
+            xstream = new tfs.Stream(node.first("name").val(),
+                                    node.first("title").val(),
+                                    node.first("link").val(),
+                                    node.first("viewers").val());
             //live.push(xstream);
             return xstream;
         });
@@ -42,8 +41,8 @@ $(function() {
 
 
     function streamError() {
-        $streamlist.css("display", "none");
-        $('#error').css("display", "");
+        $streamlist.hide();
+        $("#error").show();
     }
 
     //creates custom style sheet for user
@@ -73,18 +72,14 @@ $(function() {
     *******************/
     tfs.getStreamsXML(function (xml) {
         streamsFromXML(xml, buildStreamList);
-    });
+    }, streamError);
 
     //while ajax loads doc do some stuff
 
     applyStyles(); //applies user styles
 
-    //ext cant have inlines so you have to do it like this
-    $('#tftv-logo').on("click", function() {
-        tf.browser.openTab(options.tftvURL);
-    });
 
-    template = Mustache.compile($('#stream-list').html());//precompile nothing better to do right now
+    template = Mustache.compile($("#stream-list").html());//precompile nothing better to do right now
 
     //redirects user to stream on a linked event. assumes attr stream-link set
     $streamlist.on("click", ".subscribe", function(evt) {
@@ -95,12 +90,10 @@ $(function() {
         tfs.subscribe($par.attr("stream-name"), {
             link: $par.attr("stream-link")
         });
-    })
-    .on('click', 'a', function(evt) {//redirect to stream
-        var url = this.getAttribute('stream-link');
-        tf.browser.openTab(url);
+    });
+    $(document).on("click", "a", function(evt) {//redirect to stream or url
+        tf.browser.openTab(this.getAttribute("stream-link") || this.href);
         evt.preventDefault();
         evt.stopPropagation();
     });
-
 });
