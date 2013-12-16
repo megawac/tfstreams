@@ -1,4 +1,5 @@
 (function() {
+    "use strict";
     var tf = (window.tf = window.tf || {});
 
     //basic deep extend
@@ -23,7 +24,6 @@
     //checks how many streams are live every 60 seconds & updates badge
     //Im not sure how expensive these pages are need to find some benchmarks before i start including libs
     tf.streams = (function(undefined) {
-        "use strict";
         var defaults = {//default options
                 refreshInterval: 30,//secs
                 streamURL: "http://teamfortress.tv/rss/streams",
@@ -36,36 +36,36 @@
                 },
 
                 colours: {
-                    badge: '#454D47',
-                    hover: '#eceef0',
-                    logo: '#2a2a2a',
-                    listEven: '#F5F5F5',
-                    listOdd: '#FCFCFC'
+                    badge: "#454D47",
+                    hover: "#eceef0",
+                    logo: "#2a2a2a",
+                    listEven: "#F5F5F5",
+                    listOdd: "#FCFCFC"
                 },
 
                 text: {
-                    font: 'Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;',
+                    font: "Optima, Segoe, \"Segoe UI\", Candara, Calibri, Arial, sans-serif;",
                     tooltips: true,
                     lineHeight: 1.6,//factor
 
                     name: {
                         fontsize: 15,//px
                         bold: false,
-                        colour: '#000000',
+                        colour: "#000000",
                         width: false
                     },
 
                     title: {
                         fontsize: 14,
                         bold: false,
-                        colour: '#141414',
+                        colour: "#141414",
                         width: false
                     },
 
                     views: {
                         fontsize: 12,
                         bold: false,
-                        colour: '#535353',
+                        colour: "#535353",
                         width: 24
                     }
                 }
@@ -90,23 +90,27 @@
         }
 
         // get streams from streamURL
-        function getStreamsXML(fun) {
-            // console.time("Fetching streams");
+        function getStreamsXML(fun, error) {
             var xhr = new XMLHttpRequest();
-            xhr.overrideMimeType('text/xml');
+            var ehandler = function() { if(error) {error(xhr, xhr.status); } };
+            xhr.overrideMimeType("text/xml");
             xhr.open("GET", options.streamURL, true);
             xhr.onreadystatechange = (function() {
                 if (xhr.readyState === 4) { //when retrieved
-                    // console.timeEnd("Fetching streams");
-                    //callback
-                    return fun(xhr.responseXML || xhr.response);
+                    if(xhr.status === 200) {
+                        //callback
+                        return fun(xhr.responseXML || xhr.response);
+                    } else {
+                        ehandler();
+                    }
                 }
             });
+            xhr.onerror = ehandler;
             xhr.send(); //fetch
         }
 
         function processStreams(xml) {
-            var streams = tf.XML(xml).find('stream');
+            var streams = tf.XML(xml).find("stream");
 
             var names = streams.map(function(node){  return node.find("name").val(); });
 
@@ -117,7 +121,8 @@
                             title: name + " just went live!",
                             message: "Click this notification to view their stream",
                             onClicked: function() {
-                                tf.browser.openTab(subscriptions[name].link);
+                                var link = subscriptions[name].link;
+                                tf.browser.openTab(link.indexOf("//") >= 0 ? link : "http://" + link);
                             },
                             duration: options.notifications.duration *1000
                         });
@@ -135,15 +140,15 @@
         function refresh () {
             getStreamsXML(processStreams);
             if(!isFinite(options.refreshInterval) || options.refreshInterval <= 0) {//safety first
-                // console.log(options.refreshInterval + ' canceled');
+                // console.log(options.refreshInterval + " canceled");
                 cancelRefresh();
             }
         }
 
         function cancelRefresh() {
             if(lock) lock.clear();
-            tf.browser.updateBadge({text:''});
-            // console.log('cancelling refresh. Prev interval ' + options.refreshInterval);
+            tf.browser.updateBadge({text:""});
+            // console.log("cancelling refresh. Prev interval " + options.refreshInterval);
         }
 
         function startRefresh() {
@@ -152,7 +157,7 @@
                 refresh();
                 lock = tf.browser.throttle(refresh, options.refreshInterval * 1000);
             } else {
-                tf.browser.updateBadge({text:''});
+                tf.browser.updateBadge({text:""});
             }
         }
 
@@ -184,12 +189,12 @@
         function getLocalOptions() {
             tf.merge(options, defaults);
 
-            tf.browser.storage.getItem('options', function(data) {
+            tf.browser.storage.getItem("options", function(data) {
                 if(typeof data !== "string") {
                     tf.merge(options, data);
                 } else {
                     tf.merge(options, JSON.parse(data));
-                    tf.browser.storage.setItem('options', options);//invalid
+                    tf.browser.storage.setItem("options", options);//invalid
                 }
             });
 
@@ -200,7 +205,7 @@
                 }
                 subscriptions = tf.streams.subscriptions = data || {
                     "TeamFortressTV": {//you get auto subscribed to tftv by default ;)
-                        link: "teamfortress.tv/streams/view/TeamFortressTV"
+                        link: "http://teamfortress.tv/streams/view/TeamFortressTV"
                     }
                 };
             });
