@@ -1,5 +1,5 @@
 {
-   "version": "1.2.10",
+   "version": "1.2.11",
    "manifest_version": 2,
 
    "description": "Stream aggregator using teamfortress.tv (tf.tv). Grabs streams from http://teamfortress.tv/rss/streams",

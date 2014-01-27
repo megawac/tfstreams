@@ -95,5 +95,6 @@ $(function() {
         tf.browser.openTab(this.getAttribute("stream-link") || this.href);
         evt.preventDefault();
         evt.stopPropagation();
+        window.close(); //close popup
     });
 });
