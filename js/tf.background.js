@@ -26,7 +26,7 @@
     tf.streams = (function(undefined) {
         var defaults = {//default options
                 refreshInterval: 30,//secs
-                streamURL: "http://www.teamfortress.tv/rss/streams",
+                streamsURL: "http://www.teamfortress.tv/rss/streams",
                 tftvURL: "http://www.teamfortress.tv",
                 streamsPerPage: 12,
 
@@ -89,12 +89,12 @@
             this.subscribed = subscriptions.hasOwnProperty(name);
         }
 
-        // get streams from streamURL
+        // get streams from streamsURL
         function getStreamsXML(fun, error) {
             var xhr = new XMLHttpRequest();
             var ehandler = function() { if(error) {error(xhr, xhr.status); } };
             xhr.overrideMimeType("text/xml");
-            xhr.open("GET", options.streamURL, true);
+            xhr.open("GET", options.streamsURL, true);
             xhr.onreadystatechange = (function() {
                 if (xhr.readyState === 4) { //when retrieved
                     if(xhr.status === 200) {
