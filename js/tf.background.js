@@ -26,8 +26,8 @@
     tf.streams = (function(undefined) {
         var defaults = {//default options
                 refreshInterval: 30,//secs
-                streamURL: "http://teamfortress.tv/rss/streams",
-                tftvURL: "http://teamfortress.tv",
+                streamURL: "http://www.teamfortress.tv/rss/streams",
+                tftvURL: "http://www.teamfortress.tv",
                 streamsPerPage: 12,
 
                 notifications: {
@@ -205,7 +205,7 @@
                 }
                 subscriptions = tf.streams.subscriptions = data || {
                     "TeamFortressTV": {//you get auto subscribed to tftv by default ;)
-                        link: "http://teamfortress.tv/streams/view/TeamFortressTV"
+                        link: "http://www.teamfortress.tv/streams/view/TeamFortressTV"
                     }
                 };
             });
